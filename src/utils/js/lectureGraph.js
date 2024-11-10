@@ -17,7 +17,6 @@ export async function lireSommets(filePath) {
                 const branche = parseInt(parts[parts.length - 1], 10);
         
                 sommets.set(id, { id, nom, numLigne, estTerminus, branche });
-                sommets.set(nom, { id, nom, numLigne, estTerminus, branche });
             }
         });
         
