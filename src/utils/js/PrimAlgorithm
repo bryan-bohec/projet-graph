@@ -1,7 +1,7 @@
-export function primAlgorithm(matrice) {
+export function primAlgorithm(matrice,sommetDeDepart) {
     const nbSommets = matrice.length;
     const sommetsChoisis = Array(nbSommets).fill(false);
-    sommetsChoisis[0] = true; // Commencer par le premier sommet ou on peut changer pour en choisir un autre par exemple lors de l'affichage sur la map avec le clic
+    sommetsChoisis[sommetDeDepart] = true; // Commencer par le premier sommet ou on peut changer pour en choisir un autre par exemple lors de l'affichage sur la map avec le clic
 
     let listeAretes = [];
 

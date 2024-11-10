@@ -55,8 +55,8 @@ async function lireEntree(prompt, sommets) {
 async function main() {
     const sommets = await lireSommets("../../../sujet/entree.txt");
     const matrice = await lireGraphe("../../../sujet/entree.txt");
-    const mst = primAlgorithm(matrice);
-    console.log("Arbre couvrant minimal:", mst);
+    const acm = primAlgorithm(matrice,0);
+    console.dir(acm, {'maxArrayLength': null})
 
     let stationChoisie = await lireEntree("Entrez le nom de la station de départ: ", sommets);
     let stationArrivee = await lireEntree("Entrez le nom de la station d'arrivée: ", sommets);
