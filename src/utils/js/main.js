@@ -1,5 +1,6 @@
 import { lireGraphe, lireSommets } from "./lectureGraph.js";
 import { bellmanFord, reconstruireChemin } from "./BellmanGraph.js";
+import { primAlgorithm } from "./PrimAlgorithm";
 import readline from 'readline';
 
 
@@ -38,7 +39,7 @@ async function lireEntree(prompt, sommets) {
         const numLignes = []
         stationsArrivées.every(station => numLignes.push(station.numLigne));
 
-        const demandeLigne = `Plusieurs stations "${stationDepart}" existent choisir la ligne [${numLignes}] voulue :`;
+        const demandeLigne = `Plusieurs stations "${stationDepart}" existent, veuillez choisir la ligne [${numLignes}] voulue :`;
         const ligne = await question(demandeLigne)
 
         const stationReponse = stationsArrivées.find(station => station.numLigne === ligne)
@@ -54,6 +55,8 @@ async function lireEntree(prompt, sommets) {
 async function main() {
     const sommets = await lireSommets("../../../sujet/entree.txt");
     const matrice = await lireGraphe("../../../sujet/entree.txt");
+    const mst = primAlgorithm(matrice);
+    console.log("Arbre couvrant minimal:", mst);
 
     let stationChoisie = await lireEntree("Entrez le nom de la station de départ: ", sommets);
     let stationArrivee = await lireEntree("Entrez le nom de la station d'arrivée: ", sommets);
