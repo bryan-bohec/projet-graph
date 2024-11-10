@@ -22,7 +22,7 @@ async function lireEntree(prompt, sommets) {
         }
         stationChoisie = sommets.get(stationDepart);
         if (!stationChoisie) {
-            console.log("La station de départ n'est pas valide.");
+            console.log("La station n'est pas valide.");
             continue;
         }
         break;
@@ -40,7 +40,7 @@ async function main() {
     const {predecesseurs, distances} = bellmanFord(matrice, stationChoisie.id);
     const chemin = reconstruireChemin(predecesseurs, stationChoisie.id, stationArrivee.id);
     
-
+    console.log(chemin);
 
     console.log("Vous êtes à " + stationChoisie.nom);
     let ligne = stationChoisie.numLigne;
