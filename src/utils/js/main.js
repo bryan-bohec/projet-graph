@@ -56,7 +56,10 @@ async function main() {
     const sommets = await lireSommets("../../../sujet/entree.txt");
     const matrice = await lireGraphe("../../../sujet/entree.txt");
     const acm = primAlgorithm(matrice,0);
-    console.dir(acm, {'maxArrayLength': null})
+    acm.forEach(arete => {
+        console.log("start: "+sommets.get(arete.start).nom+" | end: "+sommets.get(arete.end).nom+" | weight: "+arete.weight);
+    });
+    //console.dir(acm, {'maxArrayLength': null})
 
     let stationChoisie = await lireEntree("Entrez le nom de la station de départ: ", sommets);
     let stationArrivee = await lireEntree("Entrez le nom de la station d'arrivée: ", sommets);
