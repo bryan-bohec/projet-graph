@@ -52,6 +52,39 @@ async function lireEntree(prompt, sommets) {
     }
 }
 
+function getDirection(depart,arrivee,sommets,matrice) {
+
+    const stationsLigne = []
+
+    for(const [k,v] of sommets){
+        if (v.numLigne === depart.numLigne){
+            stationsLigne.push(sommets.get(k))
+        }
+    }
+    const chemins = getCheminsMemeLigne([depart],depart,stationsLigne,matrice);
+
+    const bonChemins = chemins.filter(chemin => chemin.includes(arrivee))
+
+    const terminus = bonChemins.map(chemin => chemin.filter(station => (station.estTerminus && station !== depart))).flat()
+
+    const direction = terminus.map(terminus => terminus.nom)
+    const res = [...new Set(direction)];
+    return res.join(' / ');
+}
+
+function getCheminsMemeLigne(chemin,depart,stations,matrice){
+    return stations.map(destination => {
+        if (matrice[depart.id][destination.id] !== Infinity && !(chemin.includes(destination))) {
+            const newChemin = chemin.slice();
+            newChemin.push(destination);
+            if(destination.estTerminus){
+                return newChemin;
+            }
+            return getCheminsMemeLigne(newChemin,destination,stations,matrice).flat();
+        }
+    }).filter(res => res !== undefined)
+}
+
 async function main() {
     const sommets = await lireSommets("../../../sujet/entree.txt");
     const matrice = await lireGraphe("../../../sujet/entree.txt");
@@ -66,22 +99,36 @@ async function main() {
     console.log(stationChoisie.id)
     const {predecesseurs, distances} = bellmanFord(matrice, stationChoisie.id);
     const chemin = reconstruireChemin(predecesseurs, stationChoisie.id, stationArrivee.id);
-    
-    console.log(chemin);
 
     console.log("Vous êtes à " + stationChoisie.nom);
-    let ligne = stationChoisie.numLigne;
-    console.log("Prenez la ligne " + ligne);
-    
-    chemin.forEach((station) => {
-        console.log(sommets.get(station).nom);
-        if(sommets.get(station).numLigne != ligne) {
-            console.log("A "+sommets.get(station).nom+", changez et prenez la ligne "+sommets.get(station).numLigne);
-            ligne = sommets.get(station).numLigne;
-        }
-    });
+    let premierChangement = true;
+    let departLigne = stationChoisie;
 
-    console.log(distances[stationArrivee.id])
+    for(let i = 1; i < chemin.length; i++){
+        if(!chemin[i+1]){
+            const direction = " direction " + getDirection(departLigne, sommets.get(chemin[i]),sommets,matrice);
+            if(premierChangement){
+                console.log("Prenez la ligne "+sommets.get(chemin[i]).numLigne + direction);
+                premierChangement = false;
+            }
+            else{
+                console.log("A "+departLigne.nom+", changez et prenez la ligne "+departLigne.numLigne + direction);
+            }
+        }
+        if(sommets.get(chemin[i]).numLigne != sommets.get(chemin[i-1]).numLigne) {
+            const direction = " direction " + getDirection(departLigne, sommets.get(chemin[i-1]),sommets,matrice);
+            if(premierChangement){
+                console.log("Prenez la ligne "+sommets.get(chemin[i-1]).numLigne + direction);
+                premierChangement = false;
+            }
+            else{
+                console.log("A "+departLigne.nom+", changez et prenez la ligne "+departLigne.numLigne + direction);
+            }
+            departLigne = sommets.get(chemin[i]);
+        }
+    }
+
+    console.log(`Vous devriez arriver à ${stationArrivee.nom} dans environ ${distances[stationArrivee.id]/60} minutes.`)
 
     rl.close();
 }
