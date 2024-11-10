@@ -48,7 +48,7 @@ async function main() {
     
     chemin.forEach((station) => {
         if(sommets.get(station).numLigne != ligne) {
-            console.log(sommets.get(station).numLigne);
+            console.log("A "+sommets.get(station).nom+", changez et prenez la ligne "+sommets.get(station).numLigne);
             ligne = sommets.get(station).numLigne;
         }
     });
