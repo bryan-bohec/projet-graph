@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { readVertices } from '../utils/metroGraph';
+import { lireGraphe } from '../utils/lectureGraph';
+import MatriceAdjacenceView from './MatriceAdjacenceView';
+import { getNoeudsVisites } from '../utils/parcoursGraph';
+import { bellmanFord, reconstruireChemin } from '../utils/BellmanGraph';
 
 const MetroGraph: React.FC = () => {
-  const [sommets, setSommets] = useState<Map<number, any>>(new Map());
+  const [matrice, setMatrice] = useState<number[][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [noeudsVisites, setNoeudsVisites] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await readVertices('../../sujet/entree.txt');
-        setSommets(data);
+        const data = await lireGraphe('../../sujet/entree.txt');
+        setMatrice(data);
         setLoading(false);
+
+        setNoeudsVisites(getNoeudsVisites(data));
+
+        const { distances, predecesseurs } = bellmanFord(data, 48);
+        const chemin = reconstruireChemin(predecesseurs, 48, 365);
+        console.log(predecesseurs)
+        console.log(chemin)
+
       } catch (err) {
-        setError('Failed to load metro data');
-        console.log(err);
+        setError('Erreur lors du chargement des données');
         setLoading(false);
       }
     };
@@ -22,20 +33,19 @@ const MetroGraph: React.FC = () => {
     fetchData();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Chargement...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div>
-      <h1>Metro Stations</h1>
-      <ul>
-        {Array.from(sommets.entries()).map(([id, sommet]) => (
-          <li key={id}>
-            ID: {sommet.id}, Name: {sommet.nom}, Line: {sommet.numLigne}, 
-            Terminus: {sommet.estTerminus.toString()}, Branch: {sommet.branche}
-          </li>
-        ))}
-      </ul>
+      <h1>Graphe du Métro</h1>
+      <MatriceAdjacenceView matrice={matrice} />
+      <p>Noeuds visités : {noeudsVisites.map((noeud, index) => (
+        <div>
+          <span>{index}   </span>
+          <span>visité : {noeud === 1 ? 'Oui' : 'Non'}</span>
+        </div>
+      ))}</p>
     </div>
   );
 };

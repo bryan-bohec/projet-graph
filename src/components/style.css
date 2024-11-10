@@ -1,0 +1,56 @@
+.matrice-container {
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .matrice-grid {
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .row {
+    display: flex;
+    border-bottom: 1px solid #eee;
+  }
+
+  .row:last-child {
+    border-bottom: none;
+  }
+
+  .header-row {
+    display: flex;
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+
+  .cell {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #eee;
+    font-family: monospace;
+  }
+
+  .cell:last-child {
+    border-right: none;
+  }
+
+  .header {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+
+  .infinity {
+    color: #999;
+  }
+
+  .zero {
+    background-color: #e8f5e9;
+  }
+
+  .value {
+    background-color: #e3f2fd;
+  }
