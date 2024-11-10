@@ -1,6 +1,6 @@
 import { lireGraphe, lireSommets } from "./lectureGraph.js";
 import { bellmanFord, reconstruireChemin } from "./BellmanGraph.js";
-import { primAlgorithm } from "./PrimAlgorithm";
+import { primAlgorithm } from "./PrimAlgorithm.js";
 import readline from 'readline';
 
 
@@ -89,9 +89,6 @@ async function main() {
     const sommets = await lireSommets("../../../sujet/entree.txt");
     const matrice = await lireGraphe("../../../sujet/entree.txt");
     const acm = primAlgorithm(matrice,0);
-    acm.forEach(arete => {
-        console.log("start: "+sommets.get(arete.start).nom+" | end: "+sommets.get(arete.end).nom+" | weight: "+arete.weight);
-    });
     //console.dir(acm, {'maxArrayLength': null})
 
     let stationChoisie = await lireEntree("Entrez le nom de la station de départ: ", sommets);
@@ -128,7 +125,7 @@ async function main() {
         }
     }
 
-    console.log(`Vous devriez arriver à ${stationArrivee.nom} dans environ ${distances[stationArrivee.id]/60} minutes.`)
+    console.log(`Vous devriez arriver à ${stationArrivee.nom} dans environ ${(distances[stationArrivee.id]/60).toFixed(1)} minutes.`)
 
     rl.close();
 }
