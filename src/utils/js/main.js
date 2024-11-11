@@ -52,6 +52,23 @@ async function lireEntree(prompt, sommets) {
     }
 }
 
+function getTemps(duree) {
+    const hrs = ~~(duree / 3600);
+    const mins = ~~((duree % 3600) / 60);
+    const secs = ~~duree % 60;
+  
+    let temps = "";
+  
+    if (hrs > 0) {
+        temps += "" + hrs + "h " + (mins < 10 ? "0" : "");
+    }
+  
+    temps += "" + mins + "min " + (secs < 10 ? "0" : "");
+    temps += "" + secs + "s";
+  
+    return temps;
+  }
+
 function getDirection(depart,arrivee,sommets,matrice) {
 
     const stationsLigne = []
@@ -91,13 +108,13 @@ async function main() {
     const acm = primAlgorithm(matrice,0);
     //console.dir(acm, {'maxArrayLength': null})
 
-    let stationChoisie = await lireEntree("Entrez le nom de la station de départ: ", sommets);
-    let stationArrivee = await lireEntree("Entrez le nom de la station d'arrivée: ", sommets);
-    console.log(stationChoisie.id)
+    let stationChoisie = await lireEntree(`Entrez le nom de la station de départ: `, sommets);
+    let stationArrivee = await lireEntree(`Entrez le nom de la station d'arrivée: `, sommets);
+    //console.log(stationChoisie.id)
     const {predecesseurs, distances} = bellmanFord(matrice, stationChoisie.id);
     const chemin = reconstruireChemin(predecesseurs, stationChoisie.id, stationArrivee.id);
 
-    console.log("Vous êtes à " + stationChoisie.nom);
+    console.log(`Vous êtes à ${stationChoisie.nom}.`);
     let premierChangement = true;
     let departLigne = stationChoisie;
 
@@ -105,27 +122,35 @@ async function main() {
         if(!chemin[i+1]){
             const direction = " direction " + getDirection(departLigne, sommets.get(chemin[i]),sommets,matrice);
             if(premierChangement){
-                console.log("Prenez la ligne "+sommets.get(chemin[i]).numLigne + direction);
+                console.log(`Prenez la ligne ${sommets.get(chemin[i]).numLigne}${direction}.`);
                 premierChangement = false;
             }
             else{
-                console.log("A "+departLigne.nom+", changez et prenez la ligne "+departLigne.numLigne + direction);
+                console.log(`A ${departLigne.nom}, changez et prenez la ligne ${departLigne.numLigne}${direction}.`);
             }
         }
         if(sommets.get(chemin[i]).numLigne != sommets.get(chemin[i-1]).numLigne) {
             const direction = " direction " + getDirection(departLigne, sommets.get(chemin[i-1]),sommets,matrice);
             if(premierChangement){
-                console.log("Prenez la ligne "+sommets.get(chemin[i-1]).numLigne + direction);
+                console.log(`Prenez la ligne ${sommets.get(chemin[i-1]).numLigne}${direction}.`);
                 premierChangement = false;
             }
             else{
-                console.log("A "+departLigne.nom+", changez et prenez la ligne "+departLigne.numLigne + direction);
+                console.log(`A ${departLigne.nom}, changez et prenez la ligne ${departLigne.numLigne}${direction}.`);
             }
             departLigne = sommets.get(chemin[i]);
         }
     }
 
-    console.log(`Vous devriez arriver à ${stationArrivee.nom} dans environ ${(distances[stationArrivee.id]/60).toFixed(1)} minutes.`)
+    console.log(`Vous devriez arriver à ${stationArrivee.nom} dans environ ${getTemps(distances[stationArrivee.id])}.`);
+
+    const detailsReponse = await question(`Souhaitez-vous avoir plus de détails sur ce trajet ? (oui/non)`);
+    if (detailsReponse===`oui`) {
+        console.log(`Trajet entier :`);
+        chemin.forEach(element => {
+            console.log(`Station ${sommets.get(element).nom} sur la ligne ${sommets.get(element).numLigne} - Temps estimé de ${getTemps(distances[sommets.get(element).id])}`);
+        });
+    }
 
     rl.close();
 }
