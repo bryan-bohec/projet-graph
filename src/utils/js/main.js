@@ -79,10 +79,24 @@ function getDirection(depart,arrivee,sommets,matrice) {
         }
     }
     const chemins = getCheminsMemeLigne([depart],depart,stationsLigne,matrice);
+    const cheminsTraites = [];
 
-    const bonChemins = chemins.filter(chemin => chemin.includes(arrivee))
+    chemins.forEach(chemin => {
+        const terminus = chemin.filter(station => (station.estTerminus && station !== depart))
+        if(terminus.length > 1){
+            const chemin1 = chemin.slice(0,chemin.indexOf(terminus[0])+1)
+            const chemin2 = chemin.slice(chemin.indexOf(terminus[0])+1)
+            cheminsTraites.push(chemin1);
+            cheminsTraites.push(chemin2);
+        }
+        else {
+            cheminsTraites.push(chemin);
+        }
+    })
 
-    const terminus = bonChemins.map(chemin => chemin.filter(station => (station.estTerminus && station !== depart))).flat()
+    const bonChemins = cheminsTraites.filter(chemin => chemin.includes(arrivee))
+
+    const terminus = bonChemins.map(chemin => chemin.find(station => (station.estTerminus && station !== depart)))
 
     const direction = terminus.map(terminus => terminus.nom)
     const res = [...new Set(direction)];
