@@ -133,16 +133,7 @@ async function main() {
     let departLigne = stationChoisie;
 
     for(let i = 1; i < chemin.length; i++){
-        if(!chemin[i+1]){
-            const direction = " direction " + getDirection(departLigne, sommets.get(chemin[i]),sommets,matrice);
-            if(premierChangement){
-                console.log(`Prenez la ligne ${sommets.get(chemin[i]).numLigne}${direction}.`);
-                premierChangement = false;
-            }
-            else{
-                console.log(`A ${departLigne.nom}, changez et prenez la ligne ${departLigne.numLigne}${direction}.`);
-            }
-        }
+        console.log(sommets.get(chemin[i]));
         if(sommets.get(chemin[i]).numLigne != sommets.get(chemin[i-1]).numLigne) {
             const direction = " direction " + getDirection(departLigne, sommets.get(chemin[i-1]),sommets,matrice);
             if(premierChangement){
@@ -153,6 +144,17 @@ async function main() {
                 console.log(`A ${departLigne.nom}, changez et prenez la ligne ${departLigne.numLigne}${direction}.`);
             }
             departLigne = sommets.get(chemin[i]);
+        }
+        else if(!chemin[i+1]){
+            console.log("test")
+            const direction = " direction " + getDirection(departLigne, sommets.get(chemin[i]),sommets,matrice);
+            if(premierChangement){
+                console.log(`Prenez la ligne ${sommets.get(chemin[i]).numLigne}${direction}.`);
+                premierChangement = false;
+            }
+            else{
+                console.log(`A ${departLigne.nom}, changez et prenez la ligne ${departLigne.numLigne}${direction}.`);
+            }
         }
     }
 
