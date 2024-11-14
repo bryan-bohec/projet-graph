@@ -54,3 +54,49 @@
   .value {
     background-color: #e3f2fd;
   }
+
+  #map {
+    height: 400px;
+  }
+
+
+  .matrice-container {
+    margin: 20px;
+  }
+  
+  .matrice-grid {
+    display: table; /* Use table display for grid layout */
+    border-collapse: collapse; /* Collapse borders */
+  }
+  
+  .header-row {
+    display: table-row; /* Use table-row for header */
+  }
+  
+  .row {
+    display: table-row; /* Use table-row for each row */
+  }
+  
+  .cell {
+    display: table-cell; /* Use table-cell for each cell */
+    border: 1px solid #ccc; /* Add border around each cell */
+    padding: 10px; /* Add padding for better spacing */
+    text-align: center; /* Center text */
+  }
+  
+  .header {
+    font-weight: bold; /* Bold text for headers */
+    background-color: #f0f0f0; /* Light background for headers */
+  }
+  
+  .infinity {
+    background-color: #ffcccc; /* Light red for infinity values */
+  }
+  
+  .zero {
+    background-color: #ccffcc; /* Light green for zero values */
+  }
+  
+  .value {
+    background-color: #ffffff; /* White background for normal values */
+  }

@@ -4,6 +4,8 @@ export interface Sommet {
     numLigne: string;
     estTerminus: boolean;
     branche: number;
+    x? : number;
+    y? : number;
   }
 
   export async function lireSommets(filePath: string): Promise<Map<number | string, Sommet>> {
@@ -13,6 +15,7 @@ export interface Sommet {
     
     const sommets = new Map<number | string, Sommet>();
   
+
     lines.forEach(line => {
       if (line.startsWith('V')) {
         const parts = line.substring(1).trim().split(' ');
@@ -23,14 +26,58 @@ export interface Sommet {
         const branche = parseInt(parts[parts.length - 1], 10);
   
         sommets.set(id, { id, nom, numLigne, estTerminus, branche });
-        sommets.set(nom, { id, nom, numLigne, estTerminus, branche });
+        // sommets.set(nom, { id, nom, numLigne, estTerminus, branche });
       }
     });
-  
+
     return sommets;
   }
 
   export type MatriceAdjacence = number[][];
+
+export async function lireGrapheArray(filePath: string) {
+  const response = await fetch(filePath);
+  const text = await response.text();
+  const lines = text.split('\n');
+  
+  const sommets = new Map<number | string, Sommet>();
+  
+  const sommetsArray: Sommet[] = [];
+  const response2 = await fetch("../../sujet/pospoints.txt");
+  const text2 = await response2.text();
+  const lines2 = text2.split('\n');
+
+  lines.forEach(line => {
+    if (line.startsWith('V')) {
+      const parts = line.substring(1).trim().split(' ');
+      const id = parseInt(parts[0], 10);
+      const nom = parts.slice(1, -3).join(' ');
+      const numLigne = parts[parts.length - 3].replace(';', '');
+      const estTerminus = parts[parts.length - 2].replace(';', '').toLowerCase() === 'true';
+      const branche = parseInt(parts[parts.length - 1], 10);
+
+      sommets.set(id, { id, nom, numLigne, estTerminus, branche });
+      // sommets.set(nom, { id, nom, numLigne, estTerminus, branche });
+      sommetsArray.push({ id, nom, numLigne, estTerminus, branche, x: 0, y: 0 });
+    }
+  });
+
+
+  lines2.forEach(line => {
+    const parts = line.split(';');
+    const x = parseInt(parts[0], 10);
+    const y = parseInt(parts[1], 10);
+    const nom = parts[2].replace(/@/g, ' ').trim();
+  
+    for (const sommet of sommetsArray) {
+      if (sommet.nom === nom) {
+        sommet.x = x;
+        sommet.y = y;
+      }
+    }
+  });
+  return sommetsArray;
+}
 
 export async function lireGraphe(filePath: string): Promise<MatriceAdjacence> {
     const response = await fetch(filePath);

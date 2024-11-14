@@ -3,6 +3,8 @@ import { lireGraphe } from '../utils/lectureGraph';
 import MatriceAdjacenceView from './MatriceAdjacenceView';
 import { getNoeudsVisites } from '../utils/parcoursGraph';
 import { bellmanFord, reconstruireChemin } from '../utils/BellmanGraph';
+import Carte from './Carte';
+import PointsCanvas from './PointsCanvas';
 
 const MetroGraph: React.FC = () => {
   const [matrice, setMatrice] = useState<number[][]>([]);
@@ -21,8 +23,8 @@ const MetroGraph: React.FC = () => {
 
         const { distances, predecesseurs } = bellmanFord(data, 48);
         const chemin = reconstruireChemin(predecesseurs, 48, 365);
-        console.log(predecesseurs)
-        console.log(chemin)
+        // console.log(predecesseurs)
+        // console.log(chemin)
 
       } catch (err) {
         setError('Erreur lors du chargement des données');
@@ -37,17 +39,24 @@ const MetroGraph: React.FC = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <h1>Graphe du Métro</h1>
+    <>
+    <div id='map'>
+    </div>
+    <Carte />
+    {/* <PointsCanvas/> */}
+    </>
+      
+
+  );
+};
+
+      {/* <h1>Graphe du Métro</h1>
       <MatriceAdjacenceView matrice={matrice} />
       <p>Noeuds visités : {noeudsVisites.map((noeud, index) => (
         <div>
           <span>{index}   </span>
           <span>visité : {noeud === 1 ? 'Oui' : 'Non'}</span>
         </div>
-      ))}</p>
-    </div>
-  );
-};
+      ))}</p> */}
 
 export default MetroGraph;
