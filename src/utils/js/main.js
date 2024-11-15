@@ -119,8 +119,17 @@ function getCheminsMemeLigne(chemin,depart,stations,matrice){
 async function main() {
     const sommets = await lireSommets("../../../sujet/entree.txt");
     const matrice = await lireGraphe("../../../sujet/entree.txt");
-    const acm = primAlgorithm(matrice,0);
-    //console.dir(acm, {'maxArrayLength': null})
+
+    // ------------ Partie Arbre Couvrant ------------
+    //const acm = primAlgorithm(matrice,0);
+    //acm.forEach((element)=>{
+    //    element.start=sommets.get(element.start).nom;
+    //    element.end=sommets.get(element.end).nom;
+    //})
+    //console.log(acm.length);
+    //console.dir(acm, {'maxArrayLength': null});
+    //console.log(acm.reduce((n,{weight})=> n + weight,0));
+    // -----------------------------------------------
 
     let stationChoisie = await lireEntree(`Entrez le nom de la station de départ: `, sommets);
     let stationArrivee = await lireEntree(`Entrez le nom de la station d'arrivée: `, sommets);
